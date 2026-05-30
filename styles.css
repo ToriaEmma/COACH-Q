@@ -16,12 +16,7 @@
 
 html {
   color-scheme: light;
-  font-family:
-    Impact,
-    Haettenschweiler,
-    "Arial Narrow Bold",
-    "Arial Narrow",
-    sans-serif;
+  font-family: "Anton", "Arial Narrow", sans-serif;
 }
 
 body {
@@ -249,12 +244,7 @@ a {
 }
 
 .stat dt {
-  font-family:
-    Impact,
-    Haettenschweiler,
-    "Arial Narrow Bold",
-    "Arial Narrow",
-    sans-serif;
+  font-family: "Anton", "Arial Narrow", sans-serif;
   font-size: clamp(2rem, 4vw, 3.9rem);
   font-weight: 950;
   line-height: 0.9;
@@ -773,7 +763,7 @@ a {
   min-height: 50px;
   padding: 0 20px;
   color: var(--ink);
-  font: 800 0.86rem Arial, Helvetica, sans-serif;
+  font: 800 0.86rem "Inter", Arial, sans-serif;
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.42);
   border-radius: 999px;
@@ -793,7 +783,7 @@ a {
   min-height: 42px;
   padding: 0 9px 0 22px;
   color: var(--ink);
-  font: 950 0.78rem Arial, Helvetica, sans-serif;
+  font: 950 0.78rem "Inter", Arial, sans-serif;
   text-transform: uppercase;
   cursor: pointer;
   background: var(--acid);
@@ -892,7 +882,7 @@ a {
   width: 28px;
   aspect-ratio: 1;
   color: var(--ink);
-  font: 950 0.72rem Arial, Helvetica, sans-serif;
+  font: 950 0.72rem "Inter", Arial, sans-serif;
   text-transform: uppercase;
   background: var(--white);
   border: 2px solid var(--white);
@@ -907,7 +897,7 @@ a {
   margin: 0;
   padding: 10px 14px;
   color: #111111;
-  font: 950 0.78rem Arial, Helvetica, sans-serif;
+  font: 950 0.78rem "Inter", Arial, sans-serif;
   text-transform: uppercase;
   background: rgba(255, 255, 255, 0.82);
   border-radius: 999px;
