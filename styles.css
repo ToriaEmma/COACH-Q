@@ -311,7 +311,7 @@ a {
   margin: 0;
   font-size: clamp(2rem, 5vw, 4.3rem);
   font-weight: 950;
-  line-height: 0.88;
+  line-height: 1.12;
   text-transform: uppercase;
   text-wrap: balance;
 }
@@ -412,7 +412,7 @@ a {
   color: var(--white);
   font-size: clamp(2rem, 5vw, 4.8rem);
   font-weight: 950;
-  line-height: 0.88;
+  line-height: 1.06;
   text-transform: uppercase;
 }
 
@@ -920,6 +920,15 @@ a {
   background: var(--white);
   border: 2px solid var(--white);
   border-radius: 999px;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.footer-social a:hover,
+.footer-social a:focus-visible {
+  color: var(--white);
+  background: #111111;
+  border-color: #111111;
+  transform: translateY(-3px);
 }
 
 .footer-copy {
