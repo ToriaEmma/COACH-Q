@@ -45,17 +45,22 @@ module.exports = async function handler(req, res) {
   const smtpPass = process.env.SMTP_PASS;
   const toEmail = (process.env.TO_EMAIL || TO_EMAIL).trim();
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (fromEmail && !emailRegex.test(fromEmail)) {
+  // Accept either plain email `user@example.com` or `Name <user@example.com>`
+  const simpleEmail = '[^\s@]+@[^\s@]+\\.[^\s@]+';
+  const fromPattern = new RegExp(`^(?:${simpleEmail}|.+ <${simpleEmail}>$)`);
+  const toPattern = new RegExp(`^${simpleEmail}$`);
+
+  if (fromEmail && !fromPattern.test(fromEmail)) {
     return res.status(500).json({
-      message: 'Adresse d’expédition invalide. Utilisez un e-mail valide au format email@domaine.com.',
+      message:
+        "Adresse d’expédition invalide. Utilisez 'email@domaine.com' ou 'Nom <email@domaine.com>'.",
       detail: { fromEmail },
     });
   }
 
-  if (toEmail && !emailRegex.test(toEmail)) {
+  if (toEmail && !toPattern.test(toEmail)) {
     return res.status(500).json({
-      message: 'Adresse de destination invalide. Vérifiez la variable TO_EMAIL ou la valeur par défaut.',
+      message: "Adresse de destination invalide. Utilisez le format 'email@domaine.com'.",
       detail: { toEmail },
     });
   }
