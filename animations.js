@@ -94,7 +94,7 @@
         })
         .catch((error) => {
           if (status) {
-            status.textContent = "Le serveur d'envoi n'est pas actif ici. Ouverture d'un e-mail prêt à envoyer...";
+            status.textContent = `${error.message || "Le serveur d'envoi n'est pas actif ici."} Ouverture d'un e-mail prêt à envoyer...`;
             status.classList.add('is-error');
           }
           openMailFallback();
