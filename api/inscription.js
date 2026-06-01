@@ -37,12 +37,28 @@ module.exports = async function handler(req, res) {
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.RESEND_FROM_EMAIL || process.env.FROM_EMAIL;
+  const fromEmail = (process.env.RESEND_FROM_EMAIL || process.env.FROM_EMAIL || '').trim();
 
   const smtpHost = process.env.SMTP_HOST;
   const smtpPort = process.env.SMTP_PORT;
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
+  const toEmail = (process.env.TO_EMAIL || TO_EMAIL).trim();
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (fromEmail && !emailRegex.test(fromEmail)) {
+    return res.status(500).json({
+      message: 'Adresse d’expédition invalide. Utilisez un e-mail valide au format email@domaine.com.',
+      detail: { fromEmail },
+    });
+  }
+
+  if (toEmail && !emailRegex.test(toEmail)) {
+    return res.status(500).json({
+      message: 'Adresse de destination invalide. Vérifiez la variable TO_EMAIL ou la valeur par défaut.',
+      detail: { toEmail },
+    });
+  }
 
   const fields = req.body || {};
   const participant = fields['Nom et Prénom du participant'] || 'Participant';
@@ -65,7 +81,7 @@ module.exports = async function handler(req, res) {
       },
       body: JSON.stringify({
         from: fromEmail,
-        to: TO_EMAIL,
+        to: toEmail,
         subject: `Nouvelle inscription Coach Q Camp - ${participant}`,
         html,
       }),
@@ -101,7 +117,7 @@ module.exports = async function handler(req, res) {
 
       await transporter.sendMail({
         from: fromEmail,
-        to: TO_EMAIL,
+        to: toEmail,
         subject: `Nouvelle inscription Coach Q Camp - ${participant}`,
         html,
       });
