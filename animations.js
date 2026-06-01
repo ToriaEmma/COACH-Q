@@ -41,14 +41,63 @@
     });
 
     form?.addEventListener('submit', (event) => {
-      // If the form action points to an external origin (e.g. FormSubmit), allow the browser to submit normally.
+      // Intercept submission. If action is external FormSubmit, perform AJAX post to avoid redirecting to formsubmit.co.
+      let actionUrl;
       try {
-        const actionUrl = new URL(form.action, window.location.href);
-        if (actionUrl.origin !== window.location.origin) {
-          return; // let browser perform the external submission
-        }
+        actionUrl = new URL(form.action, window.location.href);
       } catch (e) {
-        // proceed with JS submission if URL parsing fails
+        actionUrl = null;
+      }
+
+      if (actionUrl && actionUrl.hostname && actionUrl.hostname.includes('formsubmit.co')) {
+        event.preventDefault();
+
+        const submitButton = form.querySelector('.registration-submit');
+        const status = form.querySelector('.form-status');
+        const data = new FormData(form);
+
+        if (status) {
+          status.textContent = 'Envoi de l\'inscription...';
+          status.className = 'form-status';
+        }
+        if (submitButton) submitButton.disabled = true;
+
+        // Extract destination email from action path: /cakpojulia7@gmail.com
+        const pathParts = actionUrl.pathname.split('/').filter(Boolean);
+        const destEmail = pathParts[0] || '';
+        const ajaxUrl = `${actionUrl.origin}/ajax/${encodeURIComponent(destEmail)}`;
+
+        fetch(ajaxUrl, {
+          method: 'POST',
+          body: data,
+        })
+          .then(async (resp) => {
+            if (!resp.ok) {
+              const text = await resp.text().catch(() => 'Erreur lors de la requête.');
+              throw new Error(text || 'Erreur lors de la requête FormSubmit');
+            }
+            return resp.json().catch(() => ({}));
+          })
+          .then(() => {
+            form.reset();
+            // Redirect to thank-you page if provided via hidden _next, otherwise to /merci.html
+            const nextField = form.querySelector('input[name="_next"]');
+            const nextUrl = (nextField && nextField.value) || '/merci.html';
+            window.location.href = nextUrl;
+          })
+          .catch((err) => {
+            if (status) {
+              status.textContent = 'Impossible d\'envoyer via FormSubmit AJAX. Redirection...';
+              status.classList.add('is-error');
+            }
+            // fallback: open normal formsubmit submission page
+            window.location.href = form.action;
+          })
+          .finally(() => {
+            if (submitButton) submitButton.disabled = false;
+          });
+
+        return;
       }
 
       event.preventDefault();
