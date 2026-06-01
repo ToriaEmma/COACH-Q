@@ -1,5 +1,118 @@
 (function () {
+  function bindRegistrationModal() {
+    const modal = document.querySelector('.registration-modal');
+    if (!modal) {
+      return;
+    }
+
+    const dialog = modal.querySelector('.registration-dialog');
+    const form = modal.querySelector('.registration-form');
+    const openers = document.querySelectorAll('.js-open-registration');
+    const closers = modal.querySelectorAll('[data-close-registration]');
+    let lastFocus = null;
+
+    function openModal(event) {
+      event?.preventDefault();
+      lastFocus = document.activeElement;
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('registration-lock');
+      modal.querySelector('input, select, textarea, button')?.focus();
+
+      if (window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        window.gsap.fromTo(dialog, { y: 34, opacity: 0, scale: 0.97 }, { y: 0, opacity: 1, scale: 1, duration: 0.32, ease: 'power3.out' });
+      }
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('registration-lock');
+      lastFocus?.focus?.();
+    }
+
+    openers.forEach((opener) => opener.addEventListener('click', openModal));
+    closers.forEach((closer) => closer.addEventListener('click', closeModal));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+        closeModal();
+      }
+    });
+
+    form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const submitButton = form.querySelector('.registration-submit');
+      const status = form.querySelector('.form-status');
+      const data = new FormData(form);
+      const payload = {};
+      const lines = ['Nouvelle inscription Coach Q Camp', ''];
+
+      data.forEach((value, key) => {
+        payload[key] = value;
+        lines.push(`${key}: ${value || 'Non renseigné'}`);
+      });
+
+      function openMailFallback() {
+        const subject = encodeURIComponent('Nouvelle inscription Coach Q Camp');
+        const body = encodeURIComponent(lines.join('\n'));
+        window.location.href = `mailto:cakpojulia7@gmail.com?subject=${subject}&body=${body}`;
+      }
+
+      if (status) {
+        status.textContent = "Envoi de l'inscription...";
+        status.className = 'form-status';
+      }
+
+      if (submitButton) {
+        submitButton.disabled = true;
+      }
+
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+        .then(async (response) => {
+          if (!response.ok) {
+            const error = await response.json().catch(() => ({
+              message: "Le serveur d'envoi n'est pas actif ici. Testez sur Vercel avec Resend configuré.",
+            }));
+            throw new Error(error.message || "L'envoi a échoué.");
+          }
+          return response.json();
+        })
+        .then(() => {
+          form.reset();
+          if (status) {
+            status.textContent = "Inscription envoyée avec succès.";
+            status.classList.add('is-success');
+          }
+        })
+        .catch((error) => {
+          if (status) {
+            status.textContent = "Le serveur d'envoi n'est pas actif ici. Ouverture d'un e-mail prêt à envoyer...";
+            status.classList.add('is-error');
+          }
+          openMailFallback();
+        })
+        .finally(() => {
+          if (submitButton) {
+            submitButton.disabled = false;
+          }
+        });
+    });
+  }
+
   if (!window.gsap) {
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', bindRegistrationModal, { once: true });
+    } else {
+      bindRegistrationModal();
+    }
     return;
   }
 
@@ -259,6 +372,7 @@
     bindHoverMotion();
     bindAccordionMotion();
     bindMediaOpenMotion();
+    bindRegistrationModal();
     window.ScrollTrigger?.refresh();
   }
 
