@@ -43,6 +43,9 @@ module.exports = async function handler(req, res) {
   const smtpPort = process.env.SMTP_PORT;
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
+  // Gmail fallback: support GMAIL_USER + GMAIL_PASS (app password)
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_PASS;
   const toEmail = (process.env.TO_EMAIL || TO_EMAIL).trim();
 
   // Accept either plain email `user@example.com` or `Name <user@example.com>`
@@ -104,21 +107,31 @@ module.exports = async function handler(req, res) {
   }
 
   // Fallback to SMTP via Nodemailer if SMTP vars are provided
-  if (smtpHost && smtpUser && smtpPass && fromEmail) {
+  // If explicit SMTP provided, use it. Otherwise, allow Gmail app-password fallback.
+  let useSmtp = Boolean(smtpHost && smtpUser && smtpPass && fromEmail);
+  let smtpOptions = { host: smtpHost, port: Number(smtpPort || 587), secure: Number(smtpPort) === 465 };
+
+  if (!useSmtp && gmailUser && gmailPass) {
+    // configure Gmail SMTP
+    smtpOptions = { host: 'smtp.gmail.com', port: 465, secure: true };
+    useSmtp = true;
+  }
+
+  const finalSmtpUser = smtpUser || gmailUser;
+  const finalSmtpPass = smtpPass || gmailPass;
+
+  if (useSmtp && finalSmtpUser && finalSmtpPass && fromEmail) {
     if (!nodemailer) {
       return res.status(500).json({ message: 'Nodemailer non installé. Exécutez `npm install`.' });
     }
 
     try {
-      const transporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: Number(smtpPort || 587),
-        secure: Number(smtpPort) === 465,
+      const transporter = nodemailer.createTransport(Object.assign({}, smtpOptions, {
         auth: {
-          user: smtpUser,
-          pass: smtpPass,
+          user: finalSmtpUser,
+          pass: finalSmtpPass,
         },
-      });
+      }));
 
       await transporter.sendMail({
         from: fromEmail,
