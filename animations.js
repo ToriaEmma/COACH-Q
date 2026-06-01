@@ -41,6 +41,16 @@
     });
 
     form?.addEventListener('submit', (event) => {
+      // If the form action points to an external origin (e.g. FormSubmit), allow the browser to submit normally.
+      try {
+        const actionUrl = new URL(form.action, window.location.href);
+        if (actionUrl.origin !== window.location.origin) {
+          return; // let browser perform the external submission
+        }
+      } catch (e) {
+        // proceed with JS submission if URL parsing fails
+      }
+
       event.preventDefault();
 
       const submitButton = form.querySelector('.registration-submit');
