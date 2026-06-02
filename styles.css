@@ -932,6 +932,26 @@ a {
   box-shadow: 0 0 0 3px rgba(244, 122, 34, 0.42);
 }
 
+.offer-form .offer-action {
+  justify-self: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 50px;
+  padding: 0 20px;
+  color: var(--ink);
+  font: 400 0.86rem var(--font-support);
+  text-align: left;
+  text-transform: none;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+}
+
+.offer-form .offer-action:hover,
+.offer-form .offer-action:focus-visible {
+  box-shadow: 0 0 0 3px rgba(244, 122, 34, 0.42);
+  outline: 0;
+}
+
 .offer-form button {
   justify-self: start;
   display: inline-flex;
