@@ -41,65 +41,6 @@
     });
 
     form?.addEventListener('submit', (event) => {
-      // Intercept submission. If action is external FormSubmit, perform AJAX post to avoid redirecting to formsubmit.co.
-      let actionUrl;
-      try {
-        actionUrl = new URL(form.action, window.location.href);
-      } catch (e) {
-        actionUrl = null;
-      }
-
-      if (actionUrl && actionUrl.hostname && actionUrl.hostname.includes('formsubmit.co')) {
-        event.preventDefault();
-
-        const submitButton = form.querySelector('.registration-submit');
-        const status = form.querySelector('.form-status');
-        const data = new FormData(form);
-
-        if (status) {
-          status.textContent = 'Envoi de l\'inscription...';
-          status.className = 'form-status';
-        }
-        if (submitButton) submitButton.disabled = true;
-
-        // Extract destination email from action path: /cakpojulia7@gmail.com
-        const pathParts = actionUrl.pathname.split('/').filter(Boolean);
-        const destEmail = pathParts[0] || '';
-        const ajaxUrl = `${actionUrl.origin}/ajax/${encodeURIComponent(destEmail)}`;
-
-        fetch(ajaxUrl, {
-          method: 'POST',
-          body: data,
-        })
-          .then(async (resp) => {
-            if (!resp.ok) {
-              const text = await resp.text().catch(() => 'Erreur lors de la requête.');
-              throw new Error(text || 'Erreur lors de la requête FormSubmit');
-            }
-            return resp.json().catch(() => ({}));
-          })
-          .then(() => {
-            form.reset();
-            // Redirect to thank-you page if provided via hidden _next, otherwise to /merci.html
-            const nextField = form.querySelector('input[name="_next"]');
-            const nextUrl = (nextField && nextField.value) || '/merci.html';
-            window.location.href = nextUrl;
-          })
-          .catch((err) => {
-            if (status) {
-              status.textContent = 'Impossible d\'envoyer via FormSubmit AJAX. Redirection...';
-              status.classList.add('is-error');
-            }
-            // fallback: open normal formsubmit submission page
-            window.location.href = form.action;
-          })
-          .finally(() => {
-            if (submitButton) submitButton.disabled = false;
-          });
-
-        return;
-      }
-
       event.preventDefault();
 
       const submitButton = form.querySelector('.registration-submit');
@@ -166,16 +107,18 @@
     });
   }
 
-  if (!window.gsap) {
+  const gsap = window.gsap;
+
+  if (!gsap) {
     if (document.readyState === 'loading') {
       window.addEventListener('DOMContentLoaded', bindRegistrationModal, { once: true });
+      window.addEventListener('DOMContentLoaded', bindMediaOpenMotion, { once: true });
     } else {
       bindRegistrationModal();
+      bindMediaOpenMotion();
     }
     return;
   }
-
-  const gsap = window.gsap;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (window.ScrollTrigger) {
@@ -418,10 +361,128 @@
   }
 
   function bindMediaOpenMotion() {
-    document.querySelectorAll('.media-open').forEach((link) => {
-      link.addEventListener('click', () => {
-        gsap.fromTo(link, { scale: 0.98 }, { scale: 1, duration: 0.22, ease: 'power2.out' });
+    const lightbox = document.querySelector('.photo-lightbox');
+    const lightboxImage = lightbox?.querySelector('img');
+    const closeButton = lightbox?.querySelector('.photo-lightbox-close');
+    const prevButton = lightbox?.querySelector('.photo-lightbox-prev');
+    const nextButton = lightbox?.querySelector('.photo-lightbox-next');
+    const caption = lightbox?.querySelector('.photo-lightbox-caption');
+    const trainingCards = Array.from(document.querySelectorAll('.training-card[data-photo]'));
+    const programCards = Array.from(document.querySelectorAll('.program-card[data-photo]'));
+    const cards = [...trainingCards, ...programCards];
+    let activeCards = cards;
+    let currentIndex = 0;
+    let lastFocus = null;
+
+    function showPhoto(index, group = activeCards) {
+      if (!lightbox || !lightboxImage || group.length === 0) return;
+      activeCards = group;
+      currentIndex = (index + activeCards.length) % activeCards.length;
+      const card = activeCards[currentIndex];
+      lightboxImage.src = card.dataset.photo || '';
+      lightboxImage.alt = card.dataset.title || card.querySelector('img')?.alt || 'Photo du programme';
+      caption.textContent = lightboxImage.alt;
+      lightbox.classList.add('is-open');
+      lightbox.classList.toggle('is-training-photo', card.classList.contains('training-card'));
+      lightbox.setAttribute('aria-hidden', 'false');
+      closeButton?.focus();
+      if (window.gsap) {
+        gsap.fromTo(lightboxImage, { opacity: 0, scale: 0.98 }, { opacity: 1, scale: 1, duration: 0.22, ease: 'power2.out' });
+      }
+    }
+
+    function closeLightbox() {
+      if (!lightbox || !lightboxImage) return;
+      lightbox.classList.remove('is-open');
+      lightbox.classList.remove('is-training-photo');
+      lightbox.setAttribute('aria-hidden', 'true');
+      lightboxImage.src = '';
+      lastFocus?.focus?.();
+    }
+
+    if (closeButton) {
+      closeButton.addEventListener('click', closeLightbox);
+    }
+
+    if (prevButton) {
+      prevButton.addEventListener('click', () => showPhoto(currentIndex - 1));
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener('click', () => showPhoto(currentIndex + 1));
+    }
+
+    if (lightbox) {
+      lightbox.addEventListener('click', (event) => {
+        if (event.target === lightbox) {
+          closeLightbox();
+        }
       });
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && lightbox?.classList.contains('is-open')) {
+        closeLightbox();
+      }
+      if (event.key === 'ArrowLeft' && lightbox?.classList.contains('is-open')) {
+        showPhoto(currentIndex - 1);
+      }
+      if (event.key === 'ArrowRight' && lightbox?.classList.contains('is-open')) {
+        showPhoto(currentIndex + 1);
+      }
+    });
+
+    function bindCards(group) {
+      group.forEach((card, index) => {
+      const links = card.matches('a') ? [card] : Array.from(card.querySelectorAll('a'));
+      links.forEach((link) => {
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          lastFocus = event.currentTarget;
+          showPhoto(index, group);
+        });
+      });
+
+      card.addEventListener('click', (event) => {
+        if (event.target.closest('video, button') || (event.target.closest('a') && !card.matches('a'))) {
+          return;
+        }
+        event.preventDefault();
+        lastFocus = card;
+        showPhoto(index, group);
+      });
+
+      card.querySelectorAll('video').forEach((video) => {
+        video.addEventListener('click', (event) => event.stopPropagation());
+        video.addEventListener('pointerdown', (event) => event.stopPropagation());
+      });
+    });
+    }
+
+    bindCards(trainingCards);
+    bindCards(programCards);
+  }
+
+  function primeVideoFrames() {
+    const videos = document.querySelectorAll('.programs-section video[data-prime-frame]');
+
+    videos.forEach((video) => {
+      const revealFirstFrame = () => {
+        if (!Number.isFinite(video.duration) || video.duration <= 0 || video.currentTime > 0) {
+          return;
+        }
+
+        try {
+          video.currentTime = Math.min(0.08, video.duration / 4);
+        } catch (error) {
+          // Some browsers block seeking before enough data is loaded.
+        }
+      };
+
+      video.preload = 'auto';
+      video.addEventListener('loadedmetadata', revealFirstFrame, { once: true });
+      video.load();
     });
   }
 
@@ -432,6 +493,7 @@
     bindAccordionMotion();
     bindMediaOpenMotion();
     bindRegistrationModal();
+    primeVideoFrames();
     window.ScrollTrigger?.refresh();
   }
 

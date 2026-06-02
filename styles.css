@@ -1,12 +1,4 @@
 @font-face {
-  font-family: "Anton";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("fonts/anton.woff2") format("woff2");
-}
-
-@font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 100 900;
@@ -24,6 +16,12 @@
   --court: #fa5913;
   --radius-xl: 30px;
   --shadow: 0 22px 70px rgba(0, 0, 0, 0.12);
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-main: "Barlow", "Inter", Arial, sans-serif;
+  --font-support: "Barlow", "Inter", Arial, sans-serif;
+  --weight-regular: 400;
+  --weight-bold: 700;
+  --weight-black: 800;
 }
 
 * {
@@ -32,14 +30,23 @@
 
 html {
   color-scheme: light;
-  font-family: "Anton", "Arial Narrow", sans-serif;
+  font-family: var(--font-main);
 }
 
 body {
   min-height: 100vh;
   margin: 0;
   color: var(--ink);
+  font-family: var(--font-main);
+  font-weight: var(--weight-regular);
   background: linear-gradient(180deg, #ffffff 0%, var(--paper) 100%);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
 a {
@@ -88,9 +95,9 @@ a {
   justify-content: center;
   gap: clamp(18px, 4vw, 56px);
   color: var(--muted);
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-support);
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .main-nav a {
@@ -122,9 +129,9 @@ a {
   gap: 10px;
   min-height: 44px;
   padding: 0 22px;
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-support);
   font-size: 0.8rem;
-  font-weight: 900;
+  font-weight: 600;
   text-transform: uppercase;
   color: #ffffff;
   background: var(--acid);
@@ -142,8 +149,9 @@ a {
 .hero h1 {
   max-width: 1120px;
   margin: 0 auto clamp(28px, 5vw, 58px);
+  font-family: var(--font-display);
   font-size: clamp(4.1rem, 10.6vw, 10.4rem);
-  font-weight: 950;
+  font-weight: 800;
   line-height: 1.04;
   letter-spacing: 0;
   text-align: center;
@@ -204,7 +212,7 @@ a {
   gap: clamp(26px, 5vw, 72px);
   min-height: 184px;
   padding: 54px clamp(28px, 5vw, 58px) 42px;
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-support);
   background: var(--white);
   border-radius: 0 0 var(--radius-xl) var(--radius-xl);
 }
@@ -213,15 +221,28 @@ a {
   position: absolute;
   top: -58px;
   left: 0;
-  display: grid;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   place-items: center;
   min-width: min(280px, 48vw);
   min-height: 82px;
   padding: 18px 32px;
   font-size: 0.95rem;
-  font-weight: 900;
+  font-weight: 600;
   background: var(--white);
   border-radius: 0 30px 30px 0;
+}
+
+.service-tag span {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  aspect-ratio: 1;
+  color: var(--white);
+  background: var(--acid);
+  border-radius: 999px;
 }
 
 .service-tag::after {
@@ -238,8 +259,8 @@ a {
   max-width: 380px;
   margin: 0;
   font-size: clamp(1.45rem, 3vw, 2.35rem);
-  font-weight: 900;
-  line-height: 0.98;
+  font-weight: 500;
+  line-height: 1.08;
 }
 
 .stats {
@@ -260,16 +281,16 @@ a {
 }
 
 .stat dt {
-  font-family: "Anton", "Arial Narrow", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(2rem, 4vw, 3.9rem);
-  font-weight: 950;
+  font-weight: 800;
   line-height: 0.9;
   white-space: nowrap;
 }
 
 .stat dt span {
   color: var(--court);
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-support);
   font-size: 0.42em;
   vertical-align: top;
 }
@@ -278,8 +299,8 @@ a {
   margin: 12px 0 0;
   color: var(--muted);
   font-size: clamp(0.72rem, 1.2vw, 0.9rem);
-  font-weight: 700;
-  line-height: 1.25;
+  font-weight: 400;
+  line-height: 1.35;
 }
 
 .intro-section,
@@ -300,17 +321,18 @@ a {
 
 .eyebrow {
   margin: 22px 0 14px;
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-support);
   font-size: 0.78rem;
-  font-weight: 950;
+  font-weight: 600;
   text-transform: uppercase;
 }
 
 .intro-section h2 {
   max-width: 580px;
   margin: 0;
+  font-family: var(--font-display);
   font-size: clamp(2rem, 5vw, 4.3rem);
-  font-weight: 950;
+  font-weight: 800;
   line-height: 1.12;
   text-transform: uppercase;
   text-wrap: balance;
@@ -320,9 +342,9 @@ a {
   max-width: 520px;
   margin: 18px 0 0;
   color: var(--muted);
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-support);
   font-size: clamp(0.9rem, 1.5vw, 1rem);
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.45;
 }
 
@@ -333,9 +355,9 @@ a {
   min-height: 40px;
   margin-top: 26px;
   padding: 0 28px;
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-support);
   font-size: 0.72rem;
-  font-weight: 950;
+  font-weight: 600;
   text-transform: uppercase;
   border: 1px solid rgba(0, 0, 0, 0.32);
   border-radius: 999px;
@@ -352,8 +374,9 @@ a {
 .section-head h2,
 .club-section > .eyebrow {
   margin: 0;
+  font-family: var(--font-display);
   font-size: clamp(1.55rem, 3vw, 2.15rem);
-  font-weight: 950;
+  font-weight: 800;
   line-height: 1;
   text-transform: uppercase;
 }
@@ -362,9 +385,9 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-support);
   font-size: 0.72rem;
-  font-weight: 950;
+  font-weight: 600;
   text-transform: uppercase;
 }
 
@@ -410,8 +433,9 @@ a {
 .training-card span:first-of-type {
   max-width: 74%;
   color: var(--white);
+  font-family: var(--font-display);
   font-size: clamp(2rem, 5vw, 4.8rem);
-  font-weight: 950;
+  font-weight: 800;
   line-height: 1.06;
   text-transform: uppercase;
 }
@@ -422,7 +446,7 @@ a {
   width: clamp(38px, 6vw, 58px);
   aspect-ratio: 1;
   color: rgba(255, 255, 255, 0.72);
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-support);
   font-size: clamp(2rem, 4vw, 3.4rem);
   line-height: 1;
 }
@@ -467,8 +491,9 @@ a {
 
 .club-row > span:first-child {
   min-width: 0;
+  font-family: var(--font-display);
   font-size: clamp(3.4rem, 10vw, 8.4rem);
-  font-weight: 950;
+  font-weight: 800;
   line-height: 0.88;
   text-transform: uppercase;
 }
@@ -526,14 +551,14 @@ a {
   align-items: end;
   max-width: 850px;
   padding: 0 clamp(58px, 10vw, 142px) 0 0;
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-support);
 }
 
 .club-panel p {
   margin: 0;
   color: var(--muted);
   font-size: clamp(1rem, 1.7vw, 1.2rem);
-  font-weight: 800;
+  font-weight: 400;
   line-height: 1.45;
 }
 
@@ -545,7 +570,7 @@ a {
   padding: 0 20px;
   color: var(--white);
   font-size: 0.76rem;
-  font-weight: 950;
+  font-weight: 600;
   text-transform: uppercase;
   white-space: nowrap;
   background: var(--ink);
@@ -624,6 +649,110 @@ a {
   outline-offset: -10px;
 }
 
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 3vw, 34px);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(250, 89, 19, 0.2), transparent 32%),
+    rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.24s ease;
+}
+
+.photo-lightbox.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.photo-lightbox-inner {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  width: min(100%, 1120px);
+  height: min(88vh, 780px);
+  padding: clamp(10px, 2vw, 18px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: clamp(22px, 4vw, 34px);
+  background: rgba(17, 17, 17, 0.96);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.45);
+}
+
+.photo-lightbox.is-training-photo .photo-lightbox-inner {
+  width: min(100%, 980px);
+}
+
+.photo-lightbox img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  background: #050505;
+  border-radius: clamp(16px, 3vw, 24px);
+}
+
+.photo-lightbox-close,
+.photo-lightbox-prev,
+.photo-lightbox-next {
+  position: absolute;
+  top: 14px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.photo-lightbox-close {
+  right: 14px;
+}
+
+.photo-lightbox-prev {
+  top: 50%;
+  left: clamp(16px, 3vw, 28px);
+  transform: translateY(-50%);
+}
+
+.photo-lightbox-next {
+  top: 50%;
+  right: clamp(16px, 3vw, 28px);
+  transform: translateY(-50%);
+}
+
+.photo-lightbox-close:hover,
+.photo-lightbox-close:focus-visible,
+.photo-lightbox-prev:hover,
+.photo-lightbox-prev:focus-visible,
+.photo-lightbox-next:hover,
+.photo-lightbox-next:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  outline: none;
+}
+
+.photo-lightbox-caption {
+  margin: 12px 0 2px;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  text-align: center;
+  max-width: 880px;
+  justify-self: center;
+}
+
 .program-card img {
   display: block;
   z-index: auto;
@@ -647,6 +776,11 @@ a {
 .card-small {
   grid-column: 2;
   grid-row: 3;
+  cursor: pointer;
+}
+
+.card-small:hover {
+  opacity: 0.96;
 }
 
 .card-right {
@@ -664,8 +798,9 @@ a {
 .program-copy h2 {
   max-width: 420px;
   margin: 0;
+  font-family: var(--font-display);
   font-size: clamp(2.1rem, 4.6vw, 4.8rem);
-  font-weight: 950;
+  font-weight: 800;
   line-height: 0.9;
   text-transform: uppercase;
 }
@@ -674,9 +809,9 @@ a {
   max-width: 360px;
   margin: 16px 0 0;
   color: var(--muted);
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-support);
   font-size: 0.86rem;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.45;
 }
 
@@ -691,7 +826,7 @@ a {
   justify-content: space-between;
   min-height: 58px;
   padding: 8px 10px 8px 24px;
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-support);
   background: rgba(255, 255, 255, 0.74);
   border: 1px solid rgba(255, 255, 255, 0.44);
   border-radius: 999px;
@@ -706,7 +841,7 @@ a {
 .program-meta span {
   color: var(--ink);
   font-size: 0.82rem;
-  font-weight: 950;
+  font-weight: 600;
 }
 
 .program-meta a {
@@ -716,7 +851,7 @@ a {
   aspect-ratio: 1;
   color: var(--white);
   font-size: 1.4rem;
-  font-weight: 950;
+  font-weight: 600;
   background: #050505;
   border-radius: 999px;
 }
@@ -768,8 +903,9 @@ a {
 
 .offer-content h2 {
   margin: 0 0 24px;
+  font-family: var(--font-display);
   font-size: clamp(2.8rem, 6vw, 6.1rem);
-  font-weight: 950;
+  font-weight: 800;
   line-height: 1.08;
   text-transform: uppercase;
 }
@@ -785,7 +921,7 @@ a {
   min-height: 50px;
   padding: 0 20px;
   color: var(--ink);
-  font: 800 0.86rem "Inter", Arial, sans-serif;
+  font: 400 0.86rem var(--font-support);
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.42);
   border-radius: 999px;
@@ -805,7 +941,7 @@ a {
   min-height: 42px;
   padding: 0 9px 0 22px;
   color: var(--ink);
-  font: 950 0.78rem "Inter", Arial, sans-serif;
+  font: 600 0.78rem var(--font-support);
   text-transform: uppercase;
   cursor: pointer;
   background: var(--acid);
@@ -868,7 +1004,7 @@ a {
   aspect-ratio: 1;
   margin: -8px -8px 8px 16px;
   color: var(--white);
-  font: 900 1.5rem/1 "Inter", Arial, sans-serif;
+  font: 600 1.5rem/1 var(--font-support);
   cursor: pointer;
   background: var(--ink);
   border: 0;
@@ -891,9 +1027,9 @@ a {
 
 .registration-head h2 {
   margin: 0;
-  font-family: "Anton", "Arial Narrow", sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(2.3rem, 6vw, 5rem);
-  font-weight: 950;
+  font-weight: 800;
   line-height: 0.95;
   text-transform: uppercase;
 }
@@ -915,7 +1051,7 @@ a {
 
 .registration-form legend {
   padding: 0 8px;
-  font-weight: 950;
+  font-weight: 600;
   text-transform: uppercase;
 }
 
@@ -924,7 +1060,7 @@ a {
   gap: 8px;
   min-width: 0;
   font-size: 0.82rem;
-  font-weight: 900;
+  font-weight: 500;
 }
 
 .registration-form small {
@@ -945,7 +1081,7 @@ a {
   min-height: 48px;
   padding: 0 14px;
   color: var(--ink);
-  font: 800 0.92rem "Inter", Arial, sans-serif;
+  font: 400 0.92rem var(--font-support);
   background: #f7f7f7;
   border: 1px solid rgba(0, 0, 0, 0.16);
   border-radius: 14px;
@@ -985,7 +1121,7 @@ a {
   min-height: 50px;
   padding: 0 12px 0 24px;
   color: var(--white);
-  font: 950 0.82rem "Inter", Arial, sans-serif;
+  font: 600 0.82rem var(--font-support);
   text-transform: uppercase;
   cursor: pointer;
   background: var(--acid);
@@ -1011,7 +1147,7 @@ a {
 .form-status {
   min-height: 22px;
   margin: -6px 0 0;
-  font: 900 0.86rem "Inter", Arial, sans-serif;
+  font: 500 0.86rem var(--font-support);
 }
 
 .form-status.is-success {
@@ -1053,9 +1189,10 @@ body.registration-lock {
   position: relative;
   z-index: 4;
   margin-top: clamp(-18px, -1vw, 0px);
+  font-family: var(--font-display);
   color: #111111;
   font-size: clamp(4.8rem, 14.5vw, 12.4rem);
-  font-weight: 950;
+  font-weight: 800;
   line-height: 0.78;
   text-transform: uppercase;
   white-space: nowrap;
@@ -1070,7 +1207,7 @@ body.registration-lock {
   gap: 8px;
   padding: 0;
   font-size: clamp(1.25rem, 2.4vw, 2rem);
-  font-weight: 950;
+  font-weight: 600;
   line-height: 0.95;
   text-transform: capitalize;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.22);
@@ -1083,6 +1220,7 @@ body.registration-lock {
 .footer-links {
   bottom: clamp(88px, 13vw, 150px);
   left: clamp(26px, 5vw, 54px);
+  gap: 10px;
 }
 
 .footer-legal {
@@ -1094,9 +1232,31 @@ body.registration-lock {
 
 .footer-links a,
 .footer-legal a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 34px;
+  padding: 0 14px;
   color: inherit;
   text-decoration: none;
-  transition: color 0.2s ease, transform 0.2s ease;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.footer-legal a {
+  justify-self: end;
+}
+
+.footer-links a::after,
+.footer-legal a::after {
+  display: none;
+  content: none;
 }
 
 .footer-links a:hover,
@@ -1104,9 +1264,10 @@ body.registration-lock {
 .footer-legal a:hover,
 .footer-legal a:focus-visible {
   color: #111111;
-  text-decoration: underline;
-  text-underline-offset: 5px;
-  text-decoration-thickness: 3px;
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+  outline: none;
 }
 
 .footer-social {
@@ -1124,7 +1285,7 @@ body.registration-lock {
   width: 28px;
   aspect-ratio: 1;
   color: var(--ink);
-  font: 950 0.72rem "Inter", Arial, sans-serif;
+  font: 600 0.72rem var(--font-support);
   text-transform: uppercase;
   background: var(--white);
   border: 2px solid var(--white);
@@ -1148,7 +1309,7 @@ body.registration-lock {
   margin: 0;
   padding: 10px 14px;
   color: #111111;
-  font: 950 0.78rem "Inter", Arial, sans-serif;
+  font: 500 0.78rem var(--font-support);
   text-transform: uppercase;
   background: rgba(255, 255, 255, 0.82);
   border-radius: 999px;
@@ -1252,7 +1413,7 @@ body.registration-lock {
   .contact-btn {
     min-height: 40px;
     padding: 0 14px;
-    font-size: 0.72rem;
+    font-size: 0.96rem;
   }
 
   .hero {
@@ -1289,8 +1450,13 @@ body.registration-lock {
     min-width: 190px;
     min-height: 68px;
     padding: 14px 20px;
-    font-size: 0.82rem;
+    font-size: 1.08rem;
     border-radius: 0 22px 22px 0;
+  }
+
+  .service-tag span {
+    width: 30px;
+    font-size: 1.15rem;
   }
 
   .stats {
@@ -1314,6 +1480,7 @@ body.registration-lock {
   }
 
   .stat dd {
+    font-size: 1.08rem;
     margin-top: 0;
   }
 
@@ -1321,8 +1488,25 @@ body.registration-lock {
     padding: 54px 0 42px;
   }
 
+  .eyebrow {
+    font-size: 1.02rem;
+  }
+
+  .intro-section p,
+  .program-copy p,
+  .club-panel p {
+    font-size: 1.18rem;
+    line-height: 1.5;
+  }
+
   .section-head {
     margin-bottom: 18px;
+  }
+
+  .section-head a,
+  .pill-btn,
+  .club-panel a {
+    font-size: 1rem;
   }
 
   .training-list {
@@ -1370,14 +1554,12 @@ body.registration-lock {
 
   .programs-grid {
     grid-template-columns: 1fr;
-    grid-template-rows: auto repeat(5, minmax(300px, 54vh));
-    gap: 14px;
+    grid-template-rows: auto repeat(4, minmax(260px, 46vh));
+    gap: 10px;
     padding: 12px;
     border-radius: 24px;
   }
 
-  .program-copy,
-  .card-feature,
   .card-tall,
   .card-top,
   .card-small,
@@ -1387,31 +1569,31 @@ body.registration-lock {
 
   .program-copy {
     grid-row: 1;
-    padding: 14px 4px 8px;
-  }
-
-  .card-feature {
-    grid-row: 2;
+    padding: 8px 4px 2px;
   }
 
   .card-tall {
-    grid-row: 3;
+    grid-row: 2;
   }
 
   .card-top {
-    grid-row: 4;
+    grid-row: 3;
   }
 
   .card-small {
-    grid-row: 5;
+    grid-row: 4;
   }
 
   .card-right {
-    grid-row: 6;
+    grid-row: 5;
   }
 
   .program-copy h2 {
-    font-size: clamp(2.7rem, 15vw, 4.6rem);
+    font-size: clamp(2.4rem, 12vw, 3.8rem);
+  }
+
+  .program-copy p {
+    margin-top: 10px;
   }
 
   .program-meta {
@@ -1419,9 +1601,102 @@ body.registration-lock {
     padding-left: 20px;
   }
 
+  .program-meta span {
+    font-size: 1.08rem;
+  }
+
   .video-card .program-meta {
     top: auto;
     bottom: 12px;
+  }
+
+  .photo-lightbox {
+    align-items: stretch;
+    padding: 0;
+    background:
+      radial-gradient(circle at 50% 18%, rgba(250, 89, 19, 0.18), transparent 34%),
+      rgba(0, 0, 0, 0.94);
+  }
+
+  .photo-lightbox-inner {
+    width: 100%;
+    height: 100svh;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: #050505;
+  }
+
+  .photo-lightbox.is-training-photo .photo-lightbox-inner {
+    width: 100%;
+    height: 100svh;
+  }
+
+  .photo-lightbox img {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 0;
+  }
+
+  .photo-lightbox.is-training-photo img {
+    object-fit: cover;
+    background: #050505;
+  }
+
+  .photo-lightbox-caption {
+    position: absolute;
+    right: 18px;
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    left: 18px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    margin: 0 58px;
+    padding: 10px 14px;
+    color: var(--white);
+    font-size: clamp(1.2rem, 7vw, 1.9rem);
+    line-height: 0.95;
+    background: rgba(0, 0, 0, 0.48);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    backdrop-filter: blur(14px);
+  }
+
+  .photo-lightbox-close,
+  .photo-lightbox-prev,
+  .photo-lightbox-next {
+    z-index: 4;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #111111;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28);
+  }
+
+  .photo-lightbox-close {
+    top: calc(14px + env(safe-area-inset-top));
+    right: 14px;
+  }
+
+  .photo-lightbox-prev,
+  .photo-lightbox-next {
+    top: auto;
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    transform: none;
+  }
+
+  .photo-lightbox-prev {
+    left: 14px;
+  }
+
+  .photo-lightbox-next {
+    right: 14px;
   }
 
   .offer-section {
@@ -1442,8 +1717,22 @@ body.registration-lock {
   .offer-form input {
     min-height: 44px;
     padding: 0 14px;
-    font-size: 0.68rem;
+    font-size: 0.96rem;
     text-overflow: ellipsis;
+  }
+
+  .offer-form button,
+  .registration-submit {
+    font-size: 1rem;
+  }
+
+  .registration-form legend,
+  .registration-form label,
+  .registration-form input,
+  .registration-form select,
+  .registration-form textarea,
+  .form-status {
+    font-size: 1.05rem;
   }
 
   .registration-dialog {
@@ -1483,6 +1772,12 @@ body.registration-lock {
     margin-top: 44px;
     width: fit-content;
     text-align: left;
+  }
+
+  .footer-links a,
+  .footer-social a,
+  .footer-copy {
+    font-size: 1rem;
   }
 
   .footer-legal {
